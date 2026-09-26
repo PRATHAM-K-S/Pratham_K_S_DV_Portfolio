@@ -1,0 +1,125 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink-950: #07090e;
+  --color-ink-900: #0b0f16;
+  --color-ink-800: #111722;
+  --color-ink-700: #1a2130;
+}
+
+@theme inline {
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-ink-950);
+  color: var(--color-slate-300);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background-color: rgb(52 211 153 / 0.25);
+  color: #f1f5f9;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-ink-950);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-ink-700);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #243044;
+}
+
+/* Waveform-pane grid: one column per clock cycle, one row per lane */
+@utility bg-timegrid {
+  background-image:
+    linear-gradient(to right, rgb(148 163 184 / 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(148 163 184 / 0.035) 1px, transparent 1px);
+  background-size: 60px 100%, 100% 28px;
+}
+
+/* Time-ruler tick marks under section headings */
+@utility ruler-ticks {
+  background-image:
+    repeating-linear-gradient(to right, rgb(71 85 105 / 0.8) 0 1px, transparent 1px 16px),
+    repeating-linear-gradient(to right, rgb(148 163 184 / 0.9) 0 1px, transparent 1px 64px);
+  background-size: 100% 5px, 100% 10px;
+  background-position: bottom left, bottom left;
+  background-repeat: no-repeat;
+  border-bottom: 1px solid rgb(51 65 85);
+}
+
+/* Hexagonal bus-value segment, like a multi-bit signal in a wave viewer */
+@utility bus-chip {
+  clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0 50%);
+}
+
+/* ── Waveform animations (triggered when a <Reveal> becomes visible) ── */
+.wave-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+.wave-fade {
+  opacity: 0;
+}
+.revealed .wave-draw {
+  animation: wave-draw 1.4s cubic-bezier(0.4, 0, 0.2, 1) var(--d, 0ms) forwards;
+}
+.revealed .wave-fade {
+  animation: wave-fade 0.6s ease-out calc(var(--d, 0ms) + 700ms) forwards;
+}
+.wave-sweep {
+  animation: wave-sweep 9s linear 1.8s infinite;
+}
+
+@keyframes wave-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes wave-fade {
+  to {
+    opacity: 1;
+  }
+}
+@keyframes wave-sweep {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(var(--sweep));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .wave-draw {
+    stroke-dashoffset: 0;
+  }
+  .wave-fade {
+    opacity: 1;
+  }
+  .revealed .wave-draw,
+  .revealed .wave-fade {
+    animation: none;
+  }
+  .wave-sweep {
+    display: none;
+  }
+}
