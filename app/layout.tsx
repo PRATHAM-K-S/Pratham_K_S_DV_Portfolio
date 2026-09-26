@@ -12,10 +12,30 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteUrl = "https://pratham-k-s-dv-portfolio.vercel.app";
+const title = "Pratham K S | Design & Verification Engineer";
+const description =
+  "Portfolio of Pratham K S, a Design & Verification Engineer working with SystemVerilog, UVM, and SVA on coverage-driven verification of AMBA APB and AXI4-Lite.";
+
 export const metadata: Metadata = {
-  title: "Pratham K S | Design & Verification Engineer",
-  description:
-    "Portfolio of Pratham K S, a Design & Verification Engineer specializing in SystemVerilog, UVM, Cocotb, and coverage-driven verification of AMBA protocols (APB, AXI4-Lite).",
+  metadataBase: new URL(siteUrl),
+  title,
+  description,
+  authors: [{ name: "Pratham K S", url: siteUrl }],
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    url: "/",
+    siteName: "Pratham K S · DV Portfolio",
+    title,
+    description,
+    locale: "en_IN",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
