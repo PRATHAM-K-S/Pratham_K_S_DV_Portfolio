@@ -2,6 +2,8 @@
 
 Personal portfolio of **Pratham K S**, a Design & Verification (DV) Engineer and 2026 Electronics and Communication Engineering graduate from NMAMIT, Nitte.
 
+**Live site:** [pratham-k-s-dv-portfolio.vercel.app](https://pratham-k-s-dv-portfolio.vercel.app)
+
 The site is styled after a waveform viewer (GTKWave / Verdi). Its timing diagrams are real SVG waveforms generated from signal data, not images.
 
 ## Highlights
@@ -114,7 +116,11 @@ const wave = {
 
 ## Deployment
 
-The site is fully static, so it can be deployed on [Vercel](https://vercel.com/new) with no configuration, or on any host that supports Next.js.
+The site is hosted on [Vercel](https://vercel.com). It is fully static, so it needs no extra configuration. To publish a new production build from this folder:
+
+```bash
+npx vercel deploy --prod
+```
 
 ## Contact
 
