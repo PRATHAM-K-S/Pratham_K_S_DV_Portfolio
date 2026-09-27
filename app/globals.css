@@ -65,6 +65,19 @@ body {
   clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0 50%);
 }
 
+/* Via pads on the scroll-driven signal trace */
+.trace-via {
+  fill: var(--color-ink-950);
+  stroke: #334155;
+  transition:
+    fill 0.3s ease,
+    stroke 0.3s ease;
+}
+.trace-via.is-lit {
+  fill: #064e3b;
+  stroke: #34d399;
+}
+
 /* ── Waveform animations (triggered when a <Reveal> becomes visible) ── */
 .wave-draw {
   stroke-dasharray: 1;

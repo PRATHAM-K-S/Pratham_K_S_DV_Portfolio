@@ -63,24 +63,26 @@ export default function Hero() {
           </div>
         </Reveal>
 
-        <Reveal delay={200} className="mt-16">
-          <ViewerWindow
-            file={heroWave.file}
-            status={
-              <>
-                <span>
-                  <span className="text-amber-300">WR0 → RD0</span> · Δ 70 ns · 3 transfers · 2
-                  wait states
-                </span>
-                <span className="text-emerald-400">● 0 protocol violations</span>
-              </>
-            }
-          >
-            <div className="overflow-x-auto">
-              <Waveform wave={heroWave} cycleWidth={60} sweep className="w-full min-w-[860px]" />
-            </div>
-          </ViewerWindow>
-        </Reveal>
+        <div data-trace-source className="mt-16">
+          <Reveal delay={200}>
+            <ViewerWindow
+              file={heroWave.file}
+              status={
+                <>
+                  <span>
+                    <span className="text-amber-300">WR0 → RD0</span> · Δ 70 ns · 3 transfers · 2
+                    wait states
+                  </span>
+                  <span className="text-emerald-400">● 0 protocol violations</span>
+                </>
+              }
+            >
+              <div className="overflow-x-auto">
+                <Waveform wave={heroWave} cycleWidth={60} sweep className="w-full min-w-[860px]" />
+              </div>
+            </ViewerWindow>
+          </Reveal>
+        </div>
       </div>
     </section>
   );
