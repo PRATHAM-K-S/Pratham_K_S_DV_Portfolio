@@ -12,10 +12,6 @@
   --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
 body {
   overflow-x: clip;
   background-color: var(--color-ink-950);
@@ -108,9 +104,6 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
   .wave-draw {
     stroke-dashoffset: 0;
   }
