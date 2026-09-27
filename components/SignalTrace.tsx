@@ -8,6 +8,8 @@ const CROSSING_WINDOW = 90;
 const CONTAINER_WIDTH = 1152;
 /** How far down the viewport the signal head sits. */
 const HEAD_VIEWPORT_RATIO = 0.62;
+/** Fraction of the gap closed per frame while the head eases toward its scroll target. */
+const EASE = 0.2;
 
 type Knot = { x: number; y: number; t: number; len: number };
 type Via = { x: number; y: number; t: number };
@@ -105,32 +107,50 @@ export default function SignalTrace({ children }: { children: ReactNode }) {
   const headRef = useRef<HTMLDivElement>(null);
   const viaRefs = useRef<(SVGCircleElement | null)[]>([]);
   const geoRef = useRef<Geometry | null>(null);
+  const rootTopRef = useRef(0);
+  const currentRef = useRef<number | null>(null);
+  const frameRef = useRef(0);
   const [geo, setGeo] = useState<Geometry | null>(null);
 
-  const update = useCallback(() => {
-    const root = rootRef.current;
+  const target = useCallback(() => {
     const geo = geoRef.current;
-    if (!geo || !root) return;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const rootTop = root.getBoundingClientRect().top + window.scrollY;
-    const t = reduced
-      ? Number.POSITIVE_INFINITY
-      : window.scrollY + window.innerHeight * HEAD_VIEWPORT_RATIO - rootTop;
+    if (!geo) return 0;
+    const end = geo.knots[geo.knots.length - 1].t;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return end;
+    // clientHeight ignores the mobile URL bar, so the head doesn't jump when it collapses.
+    const view = document.documentElement.clientHeight;
+    const raw = window.scrollY + view * HEAD_VIEWPORT_RATIO - rootTopRef.current;
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    const rawMax = maxScroll + view * HEAD_VIEWPORT_RATIO - rootTopRef.current;
+    if (window.scrollY >= maxScroll - 2) return end;
+    if (rawMax >= end) return raw;
+    // The head can't scroll down to the trace's end, so stretch the final stretch of scroll to reach it.
+    const from = Math.min(rawMax - view * 0.6, geo.vias[geo.vias.length - 2]?.t ?? rawMax);
+    if (raw <= from) return raw;
+    return from + ((raw - from) / (rawMax - from)) * (end - from);
+  }, []);
+
+  const render = useCallback((t: number) => {
+    const geo = geoRef.current;
+    if (!geo) return;
     const { len, x, y } = locate(geo.knots, t);
     const offset = String(geo.total - len);
     if (lineRef.current) lineRef.current.style.strokeDashoffset = offset;
     if (glowRef.current) glowRef.current.style.strokeDashoffset = offset;
     if (headRef.current) {
       headRef.current.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-      headRef.current.style.opacity = len > 0 && !reduced ? "1" : "0";
+      headRef.current.style.opacity = len > 0 && len < geo.total ? "1" : "0";
     }
-    viaRefs.current.forEach((el, i) => el?.classList.toggle("is-lit", geo.vias[i].t <= t));
+    viaRefs.current.forEach((el, i) => el?.classList.toggle("is-lit", geo.vias[i].t <= t + 0.5));
   }, []);
 
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return;
-    const measure = () => setGeo(buildGeometry(root));
+    const measure = () => {
+      rootTopRef.current = root.getBoundingClientRect().top + window.scrollY;
+      setGeo(buildGeometry(root));
+    };
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(root);
@@ -140,27 +160,33 @@ export default function SignalTrace({ children }: { children: ReactNode }) {
   useLayoutEffect(() => {
     geoRef.current = geo;
     viaRefs.current.length = geo?.vias.length ?? 0;
-    update();
-  }, [geo, update]);
+    const goal = target();
+    currentRef.current = goal;
+    render(goal);
+  }, [geo, target, render]);
 
   useEffect(() => {
-    let frame = 0;
-    const onScroll = () => {
-      if (!frame) {
-        frame = requestAnimationFrame(() => {
-          frame = 0;
-          update();
-        });
-      }
+    const tick = () => {
+      frameRef.current = 0;
+      const goal = target();
+      const current = currentRef.current ?? goal;
+      const next = Math.abs(goal - current) < 0.5 ? goal : current + (goal - current) * EASE;
+      currentRef.current = next;
+      render(next);
+      if (next !== goal) frameRef.current = requestAnimationFrame(tick);
     };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+    const schedule = () => {
+      if (!frameRef.current) frameRef.current = requestAnimationFrame(tick);
+    };
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
     return () => {
-      cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      cancelAnimationFrame(frameRef.current);
+      frameRef.current = 0;
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
     };
-  }, [update]);
+  }, [target, render]);
 
   return (
     <div ref={rootRef} className="relative isolate flex-1">
