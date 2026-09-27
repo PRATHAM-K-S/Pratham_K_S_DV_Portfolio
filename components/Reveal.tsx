@@ -30,7 +30,7 @@ export default function Reveal({ children, delay = 0, className = "" }: RevealPr
           }
         });
       },
-      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
+      { threshold: 0, rootMargin: "0px 0px -8% 0px" }
     );
 
     observer.observe(el);
@@ -41,10 +41,10 @@ export default function Reveal({ children, delay = 0, className = "" }: RevealPr
     <div
       ref={ref}
       style={{ transitionDelay: `${delay}ms` }}
-      className={`transition-all duration-700 ease-out motion-reduce:transition-none ${
+      className={`transition-[opacity,transform] duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${
         visible
           ? "revealed translate-y-0 opacity-100"
-          : "translate-y-6 opacity-0 motion-reduce:translate-y-0"
+          : "translate-y-4 opacity-0 motion-reduce:translate-y-0"
       } ${className}`}
     >
       {children}

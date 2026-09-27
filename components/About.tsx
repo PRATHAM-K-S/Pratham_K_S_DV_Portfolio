@@ -38,7 +38,7 @@ export default function About() {
           <SectionHeading index="1" kicker="about" title="Bug hunter by profession" />
         </Reveal>
 
-        <div className="mt-12 grid gap-12 lg:grid-cols-12">
+        <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-12">
           <Reveal delay={100} className="lg:col-span-7">
             <div className="space-y-5 text-lg leading-relaxed text-slate-400">
               <p>

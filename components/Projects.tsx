@@ -50,7 +50,7 @@ function ProjectCard({ project }: { project: Project }) {
 
         <p className="mt-4 max-w-3xl leading-relaxed text-slate-400">{project.description}</p>
 
-        <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_300px]">
+        <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_300px]">
           <div>
             <h4 className="font-mono text-xs tracking-widest text-slate-500 uppercase">
               Key highlights

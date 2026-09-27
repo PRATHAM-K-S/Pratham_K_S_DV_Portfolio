@@ -17,6 +17,7 @@ html {
 }
 
 body {
+  overflow-x: clip;
   background-color: var(--color-ink-950);
   color: var(--color-slate-300);
   font-family: var(--font-sans);
@@ -84,6 +85,7 @@ body {
 }
 .wave-sweep {
   animation: wave-sweep 9s linear 1.8s infinite;
+  will-change: transform;
 }
 
 @keyframes wave-draw {
@@ -101,7 +103,7 @@ body {
     transform: translateX(0);
   }
   to {
-    transform: translateX(var(--sweep));
+    transform: translateX(100%);
   }
 }
 

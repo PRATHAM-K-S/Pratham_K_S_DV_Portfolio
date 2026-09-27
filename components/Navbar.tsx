@@ -42,9 +42,9 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+      className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
         solid
-          ? "border-b border-slate-800/80 bg-ink-950/75 backdrop-blur-xl"
+          ? "border-b border-slate-800/80 bg-ink-950/85 backdrop-blur-md"
           : "border-b border-transparent"
       }`}
     >
@@ -109,7 +109,7 @@ export default function Navbar() {
       </nav>
 
       {open && (
-        <div className="border-t border-slate-800/80 bg-ink-950/95 backdrop-blur-xl md:hidden">
+        <div className="border-t border-slate-800/80 bg-ink-950/95 backdrop-blur-md md:hidden">
           <ul className="space-y-1 px-6 py-4">
             {navLinks.map((link) => (
               <li key={link.href}>

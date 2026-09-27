@@ -14,7 +14,7 @@ export default function Hero() {
       <WaferMap className="pointer-events-none absolute -top-40 -right-64 w-[720px] text-emerald-400 opacity-[0.07] sm:-right-40" />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -top-40 left-1/4 h-96 w-[40rem] rounded-full bg-emerald-500/10 blur-[130px]"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[36rem] bg-[radial-gradient(40rem_22rem_at_35%_0%,rgba(16,185,129,0.12),transparent_70%)]"
       />
 
       <div className="relative mx-auto max-w-6xl px-6 pt-32 pb-20 sm:pt-40">

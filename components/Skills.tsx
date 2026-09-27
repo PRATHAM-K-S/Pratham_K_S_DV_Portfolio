@@ -26,7 +26,7 @@ export default function Skills() {
               {skillCategories.map((category) => (
                 <li
                   key={category.bus}
-                  className="group grid gap-4 px-5 py-6 transition hover:bg-white/[0.015] md:grid-cols-[280px_1fr] md:items-center"
+                  className="group grid grid-cols-1 gap-4 px-5 py-6 transition-colors hover:bg-white/[0.015] md:grid-cols-[280px_minmax(0,1fr)] md:items-center"
                 >
                   <div className="flex items-start gap-3">
                     <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-slate-700 bg-slate-800/50 text-emerald-400 transition group-hover:border-emerald-500/50">
